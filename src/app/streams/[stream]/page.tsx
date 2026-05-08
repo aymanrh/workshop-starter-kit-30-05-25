@@ -1,5 +1,4 @@
 'use client'
-import { use } from 'react'
 import { StreamTabs } from '@/components/StreamTabs'
 import { WorkItemCard } from '@/components/WorkItemCard'
 import { CreateWorkItemForm } from '@/components/CreateWorkItemForm'
@@ -8,8 +7,8 @@ import { StreamId } from '@/types'
 
 const STREAM_MAP: Record<string, StreamId> = { a: 'A', b: 'B', c: 'C' }
 
-export default function StreamPage({ params }: { params: Promise<{ stream: string }> }) {
-  const { stream } = use(params)
+export default function StreamPage({ params }: { params: { stream: string } }) {
+  const { stream } = params
   const { streams, addItem, changeStatus, resetToMockData, hydrated } = useWorkItems()
   const streamId: StreamId | undefined = STREAM_MAP[stream]
   const current = streams.find(s => s.id === streamId)
