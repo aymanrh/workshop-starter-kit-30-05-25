@@ -3,6 +3,8 @@ import { test, expect } from '@playwright/test'
 test.describe('Streams dashboard', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/streams/a')
+    await page.evaluate(() => localStorage.removeItem('workshop-streams-v1'))
+    await page.reload()
   })
 
   test('shows three stream tabs', async ({ page }) => {

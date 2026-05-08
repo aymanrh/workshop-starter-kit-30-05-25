@@ -15,9 +15,10 @@ test('capture stream B dashboard', async ({ page }) => {
   await page.screenshot({ path: path.join(SCREENSHOTS_DIR, '03-stream-b.png'), fullPage: false })
 })
 
-test('capture work item status transition', async ({ page }) => {
+test('capture work item after status transition', async ({ page }) => {
   await page.goto('/streams/a')
   await page.waitForLoadState('networkidle')
+  await page.getByRole('button', { name: 'Move to Waiting' }).first().click()
   await page.screenshot({ path: path.join(SCREENSHOTS_DIR, '03-status-transition.png'), fullPage: false })
 })
 
