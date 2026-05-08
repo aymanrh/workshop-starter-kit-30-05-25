@@ -12,9 +12,6 @@ out/
 .env.local
 .env*.local
 
-# Testing
-playwright-report/
-test-results/
 
 # Misc
 .DS_Store
