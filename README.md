@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Workshop Starter Kit — `03-milestone`
 
-## Getting Started
+This branch shows a completed GSD phase 1 execution — a running Next.js app with unit tests, Playwright E2E tests, and a verification report.
 
-First, run the development server:
+Participants switch here after exploring the discussion context on `02-discussion`. The focus is on running the app, running the tests, and discussing what a human still owns in an AI-assisted delivery.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Branch Map
+
+```
+00-empty  →  01-planning  →  02-discussion  →  03-milestone
+  Start         GSD output      Phase context     Running app
+  here                                          ← you are here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## What was built (Phase 1: Foundation, Auth & Lifecycle)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Area | Details |
+|------|---------|
+| **App** | Next.js 15 App Router, TypeScript, Tailwind CSS, shadcn/ui |
+| **Unit tests** | Vitest — `tests/unit/lifecycle.test.ts` (status logic, state transitions) |
+| **E2E tests** | Playwright — `tests/e2e/streams.spec.ts` (core user flows) |
+| **Verification** | `.planning/phases/01-foundation-auth-and-lifecycle/01-VERIFICATION.md` |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Run it
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Run the tests
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Unit tests
+npm test
+
+# E2E tests
+npm run test:e2e
+
+# Open the Playwright HTML report
+npm run report
+```
+
+---
+
+## What to do on this branch
+
+1. **Run the app** — does it match what your group described on `00-empty`?
+2. **Run the tests** — watch them pass, then open the HTML report
+3. **Read `01-VERIFICATION.md`** — this is where the AI documents what it couldn't verify; that's your role as a human
+4. **UAT discussion:** the AI wrote the code AND the tests — what does a human still own?
+5. **Ship + start milestone 2:**
+
+```bash
+/gsd ship
+/gsd new-milestone
+```
+
+---
+
+## Files in this branch
+
+| File/Dir | Purpose |
+|----------|---------|
+| `src/` | Next.js app (app router, components, lib, types) |
+| `tests/unit/` | Vitest unit tests |
+| `tests/e2e/` | Playwright end-to-end tests |
+| `.planning/phases/01-foundation-auth-and-lifecycle/01-VERIFICATION.md` | AI's own verification report — what it checked and what it couldn't |
+| [`workshop.html`](workshop.html) | Step-by-step participant guide for this branch |
