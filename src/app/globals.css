@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-active: #22c55e;
+  --color-waiting: #f59e0b;
+  --color-blocked: #ef4444;
+  --color-closed: #6b7280;
+  --color-cancelled: #d1d5db;
+}
