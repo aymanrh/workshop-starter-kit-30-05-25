@@ -1,18 +1,25 @@
 import { Status } from '@/types'
 
-// Terminal states cannot transition out
-const TERMINAL: Status[] = ['closed', 'cancelled']
+// Exhaustive record — adding a new Status without updating this is a TypeScript error
+const TERMINAL: Record<Status, boolean> = {
+  active: false,
+  waiting: false,
+  blocked: false,
+  closed: true,
+  cancelled: true,
+}
 
-// All valid transitions — any non-terminal can reach any other status
+const ALL_STATUSES: Status[] = ['active', 'waiting', 'blocked', 'closed', 'cancelled']
+
+// Any non-terminal status can transition to any other status
 export function canTransition(from: Status, to: Status): boolean {
   if (from === to) return false
-  if (TERMINAL.includes(from)) return false
+  if (TERMINAL[from]) return false
   return true
 }
 
 export function getValidTransitions(from: Status): Status[] {
-  const all: Status[] = ['active', 'waiting', 'blocked', 'closed', 'cancelled']
-  return all.filter(to => canTransition(from, to))
+  return ALL_STATUSES.filter(to => canTransition(from, to))
 }
 
 export function statusLabel(status: Status): string {

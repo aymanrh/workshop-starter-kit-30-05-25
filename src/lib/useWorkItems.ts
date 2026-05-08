@@ -14,7 +14,9 @@ export function useWorkItems() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
       if (saved) setStreams(JSON.parse(saved))
-    } catch {}
+    } catch (err) {
+      console.warn('[useWorkItems] failed to load saved data, using defaults', err)
+    }
     setHydrated(true)
   }, [])
 
@@ -24,7 +26,7 @@ export function useWorkItems() {
 
   function addItem(streamId: StreamId, title: string) {
     const item: WorkItem = {
-      id: `${streamId.toLowerCase()}-${Date.now()}`,
+      id: `${streamId.toLowerCase()}-${crypto.randomUUID()}`,
       title,
       notes: '',
       status: 'active',
