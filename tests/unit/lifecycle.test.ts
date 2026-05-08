@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { canTransition, getValidTransitions } from '@/lib/lifecycle'
+import { canTransition, getValidTransitions, statusLabel, statusColor } from '@/lib/lifecycle'
 
 describe('canTransition', () => {
   it('active can transition to waiting', () => {
@@ -32,6 +32,9 @@ describe('canTransition', () => {
   it('blocked can transition to active', () => {
     expect(canTransition('blocked', 'active')).toBe(true)
   })
+  it('cancelled is terminal — cannot transition to closed', () => {
+    expect(canTransition('cancelled', 'closed')).toBe(false)
+  })
 })
 
 describe('getValidTransitions', () => {
@@ -49,5 +52,39 @@ describe('getValidTransitions', () => {
   })
   it('returns empty array for cancelled', () => {
     expect(getValidTransitions('cancelled')).toHaveLength(0)
+  })
+  it('returns 4 transitions for waiting', () => {
+    const t = getValidTransitions('waiting')
+    expect(t).toHaveLength(4)
+    expect(t).not.toContain('waiting')
+  })
+  it('returns 4 transitions for blocked', () => {
+    const t = getValidTransitions('blocked')
+    expect(t).toHaveLength(4)
+    expect(t).not.toContain('blocked')
+  })
+})
+
+describe('statusLabel', () => {
+  it('returns Active for active', () => {
+    expect(statusLabel('active')).toBe('Active')
+  })
+  it('returns Blocked for blocked', () => {
+    expect(statusLabel('blocked')).toBe('Blocked')
+  })
+  it('returns Closed for closed', () => {
+    expect(statusLabel('closed')).toBe('Closed')
+  })
+})
+
+describe('statusColor', () => {
+  it('active status color contains green', () => {
+    expect(statusColor('active')).toContain('green')
+  })
+  it('blocked status color contains red', () => {
+    expect(statusColor('blocked')).toContain('red')
+  })
+  it('closed status color contains gray', () => {
+    expect(statusColor('closed')).toContain('gray')
   })
 })
