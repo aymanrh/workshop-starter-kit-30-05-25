@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workshop — Step 03: Milestone</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fa;color:#1a1a2e;line-height:1.6}
+a{color:#4a9eff}
+.ws-header{background:#1e3a5f;color:white;padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.ws-header h1{font-size:1.1rem;font-weight:600}
+.ws-header p{font-size:0.8rem;opacity:.7;margin-top:0.2rem}
+.branch-badge{background:#4a9eff;color:white;padding:.25rem .75rem;border-radius:999px;font-size:.75rem;font-weight:700;white-space:nowrap}
+.ws-progress{height:5px;background:#e2e8f0}
+.ws-progress-fill{height:100%;background:#4a9eff;transition:width .4s}
+.ws-main{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
+.step{background:white;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.step-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.step-num{background:#1e3a5f;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.step-title{font-size:1.05rem;font-weight:600}
+.what{background:#f0f7ff;border-left:3px solid #4a9eff;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin-bottom:1rem;font-size:.92rem;color:#334155}
+.track-tabs{display:flex;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:1rem}
+.tab-btn{flex:1;padding:.55rem 1rem;border:none;cursor:pointer;font-size:.88rem;font-weight:500;background:white;color:#64748b;transition:all .15s}
+.tab-btn.active{background:#1e3a5f;color:white}
+.track{display:none}
+.track.active{display:block}
+.code-wrap{display:flex;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;margin:.6rem 0}
+.code-wrap code{background:#0f172a;color:#e2e8f0;padding:.7rem 1rem;font-family:'SF Mono','Fira Code',monospace;font-size:.88rem;flex:1;display:block;white-space:pre-wrap;word-break:break-all;line-height:1.5}
+.copy-btn{background:#334155;color:#94a3b8;border:none;padding:0 1rem;cursor:pointer;font-size:.8rem;font-weight:600;white-space:nowrap;transition:background .15s}
+.copy-btn:hover{background:#4a9eff;color:white}
+.copy-btn.copied{background:#22c55e;color:white}
+.prompt-block{background:#fafafa;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;margin:.6rem 0}
+.prompt-label{font-size:.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.prompt-text{font-style:italic;color:#475569;line-height:1.5;margin-bottom:.5rem;font-size:.92rem}
+.prompt-block .copy-btn{background:#f1f5f9;color:#4a9eff;border:1px solid #e2e8f0;border-radius:6px;padding:.3rem .75rem;cursor:pointer;font-size:.8rem;font-weight:600}
+.prompt-block .copy-btn.copied{background:#22c55e;color:white;border-color:#22c55e}
+.screenshot{margin:1rem 0}
+.screenshot img{width:100%;border-radius:8px;border:1px solid #e2e8f0;display:block}
+.screenshot-placeholder{background:#f0f7ff;border:2px dashed #4a9eff;border-radius:8px;padding:2.5rem 1rem;text-align:center;color:#4a9eff;font-size:.88rem}
+details{margin:.75rem 0}
+summary{cursor:pointer;color:#4a9eff;font-size:.88rem;font-weight:500;user-select:none}
+.expected{background:#0f172a;color:#94a3b8;padding:1rem;border-radius:0 0 8px 8px;font-family:monospace;font-size:.82rem;white-space:pre-wrap;margin-top:4px;line-height:1.5}
+.checkpoint{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:.75rem 1rem;margin-top:1rem;display:flex;align-items:center;gap:.75rem;font-size:.92rem;color:#166534}
+.checkpoint input[type=checkbox]{width:18px;height:18px;accent-color:#22c55e;cursor:pointer;flex-shrink:0}
+.timer{background:linear-gradient(135deg,#1e3a5f,#0f2644);color:white;border-radius:12px;padding:1.5rem;text-align:center;margin:1.25rem 0}
+.timer-title{font-size:.85rem;opacity:.75;margin-bottom:.4rem}
+.timer-display{font-size:3.5rem;font-weight:700;font-family:'SF Mono','Fira Code',monospace;letter-spacing:.08em;transition:color .5s}
+.timer-display.warn{color:#fbbf24}
+.timer-display.danger{color:#ef4444}
+.timer-note{font-size:.78rem;opacity:.6;margin-top:.4rem}
+.timer-controls{display:flex;gap:.75rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.timer-controls button{padding:.45rem 1.2rem;border-radius:6px;border:none;cursor:pointer;font-weight:600;font-size:.88rem;transition:opacity .15s}
+.timer-controls button:hover{opacity:.85}
+.t-start{background:#22c55e;color:white}
+.t-pause{background:#fbbf24;color:#1a1a2e}
+.t-reset{background:rgba(255,255,255,.15);color:white}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin:.75rem 0}
+.role{border-radius:8px;padding:.9rem;font-size:.88rem}
+.role-ba{background:#fdf4ff;border:1px solid #e9d5ff}
+.role-dev{background:#eff6ff;border:1px solid #bfdbfe}
+.role-tester{background:#f0fdf4;border:1px solid #bbf7d0}
+.role strong{display:block;margin-bottom:.3rem;font-size:.9rem}
+.role p{color:#64748b;font-style:italic;line-height:1.4}
+.concept{background:linear-gradient(135deg,#1e3a5f10,#4a9eff10);border:1px solid #4a9eff40;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.95rem;color:#1e3a5f}
+.concept strong{color:#4a9eff}
+.callout{background:#fef3c7;border-left:3px solid #f59e0b;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0;font-size:.9rem;color:#78350f}
+.checkpoint input[type=checkbox]{width:18px;height:18px;accent-color:#22c55e;cursor:pointer;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="ws-header">
+  <div><h1>AI-Assisted Development with GSD</h1><p>Step 03 — Running app, tests, verification, ship</p></div>
+  <span class="branch-badge">03-milestone</span>
+</div>
+<div class="ws-progress"><div class="ws-progress-fill" style="width:80%"></div></div>
+
+<div class="ws-main">
+
+  <div class="concept">
+    <strong>Is the testing pyramid still the same?</strong> The AI wrote the code AND the tests. What does a human still own? We're about to find out.
+  </div>
+
+  <!-- Step 1: Run the app -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">1</div><div class="step-title">Run the application</div></div>
+    <div class="what">📖 <strong>What this does:</strong> Starts the Next.js dev server. The app demonstrates phase 1 of the Freelancer Workstream Toolkit — 3 work streams (A, B, C) with lifecycle status management. Note: this uses mock data and localStorage, no real database or auth. Integrations are milestone 2.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>npm install && npm run dev</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <p style="font-size:.82rem;color:#94a3b8;margin-top:.4rem">Then open <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></p>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Install the dependencies and start the development server. Then describe what the running application does and what phase 1 of the spec delivered. What's working? What's mocked?</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: Running app in browser showing Stream A dashboard</div>
+    </div>
+
+    <details><summary>▶ What to expect</summary>
+<div class="expected">Header: "Freelancer Workstream Toolkit"
+Tabs: Stream A | Stream B | Stream C
+Stream A: 3 work items with Active / Waiting / Blocked status badges
+Clicking "→ Waiting" on an Active item changes its status
+"Add work item" button opens a form
+Yellow badge: "Mock data — localStorage only"</div>
+    </details>
+
+    <div class="callout">🏗️ <strong>Facilitator note:</strong> Tell participants — "This is the scaffold. Supabase auth, real database, email reminders, and collaboration features are Milestone 2. This workshop shows the workflow; the integrations are the next session."</div>
+    <div class="checkpoint"><input type="checkbox" data-ck="03-s1-app-running"><label>App running at localhost:3000 — three stream tabs visible</label></div>
+  </div>
+
+  <!-- Step 2: Run unit tests -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">2</div><div class="step-title">Run the unit tests</div></div>
+    <div class="what">📖 <strong>What this does:</strong> Vitest runs 12 unit tests against the lifecycle logic — the pure status transition rules. These test the business rules the AI wrote: what can transition to what, and why terminal states matter.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>npm test</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Run the unit tests and explain each test result in plain language. What business rules are being tested? Which results should a BA or tester care about most?</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: Vitest output showing 12 tests passing</div>
+    </div>
+
+    <details><summary>▶ Expected output</summary>
+<div class="expected">✓ tests/unit/lifecycle.test.ts (12 tests)
+
+Test Files  1 passed (1)
+Tests       12 passed (12)
+Duration    ~300ms</div>
+    </details>
+    <div class="checkpoint"><input type="checkbox" data-ck="03-s2-tests-pass"><label>12 unit tests passing</label></div>
+  </div>
+
+  <!-- Step 3: Run E2E tests -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">3</div><div class="step-title">Run end-to-end tests + generate screenshots</div></div>
+    <div class="what">📖 <strong>What this does:</strong> Playwright launches a real browser, runs 7 user flow tests, and generates an HTML report with screenshots. This is what E2E testing of AI-generated code looks like.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>npm run test:e2e</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Run the end-to-end tests and summarize the results. What user flows were tested? Which tests passed and which failed? What do the screenshots show about the app?</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: Playwright test output showing 7 tests passing with timing</div>
+    </div>
+  </div>
+
+  <!-- Step 4: Open HTML report -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">4</div><div class="step-title">Open the test report</div></div>
+    <div class="what">📖 <strong>What this does:</strong> Opens the Playwright HTML report — a visual record of every test run with screenshots, timings, and step-by-step traces. This is your quality gate evidence.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>npm run report</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Open the Playwright HTML report and describe what it shows. What evidence does it provide that the app works? What would a tester add to this report?</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: Playwright HTML report open in browser showing green test results</div>
+    </div>
+  </div>
+
+  <!-- Step 5: VERIFICATION.md -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">5</div><div class="step-title">Read the verification report — human in the loop</div></div>
+    <div class="what">📖 <strong>What this does:</strong> VERIFICATION.md is GSD's self-assessment after execution. It lists what was automatically verified and what still needs a human to check. This is the human-in-the-loop boundary.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>code .planning/phases/01-foundation-auth-and-lifecycle/01-VERIFICATION.md</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Read 01-VERIFICATION.md and tell me: what did GSD verify automatically with tests, and what still needs a human to check? For the human UAT items, who should check them and what would you look for?</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: VERIFICATION.md showing automated checks table and human UAT table</div>
+    </div>
+
+    <div class="timer">
+      <div class="timer-title">💬 Group Discussion — what does a human still own?</div>
+      <div class="timer-display" id="td-03-uat">08:00</div>
+      <div class="timer-controls">
+        <button class="t-start" onclick="startTimer('03-uat',480)">▶ Start</button>
+        <button class="t-pause" onclick="pauseTimer('03-uat')">⏸ Pause</button>
+        <button class="t-reset" onclick="resetTimer('03-uat',480)">↺ Reset</button>
+      </div>
+      <div class="timer-note">8 minutes · is the testing pyramid still the same?</div>
+    </div>
+
+    <div class="roles">
+      <div class="role role-ba"><strong>🎯 BA / PO</strong><p>Does the app deliver the user value stated in PROJECT.md? What would you show a real user and what would they say?</p></div>
+      <div class="role role-dev"><strong>💻 Developer</strong><p>Is the code structure maintainable? What hidden assumptions would a new developer miss?</p></div>
+      <div class="role role-tester"><strong>🧪 Tester / QA</strong><p>What edge cases weren't covered? What would break this in production that the tests don't catch?</p></div>
+    </div>
+  </div>
+
+  <!-- Step 6: Ship milestone -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">6</div><div class="step-title">Ship the milestone</div></div>
+    <div class="what">📖 <strong>What this does:</strong> Closes milestone v1.0, marks all completed work as validated, and archives the phase artifacts. GSD updates STATE.md to reflect the shipped state.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>/gsd ship</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">We're ready to ship milestone 1. Walk me through closing this milestone — what gets archived, what gets marked as done, and how does the project state change?</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 7: New milestone -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">7</div><div class="step-title">Start a new milestone</div></div>
+    <div class="what">📖 <strong>What this does:</strong> Initializes milestone 2 — updates PROJECT.md with what was learned, starts fresh phases. The next milestone is where real integrations (Supabase auth, database, email reminders) would be added.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>/gsd new-milestone</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Start a new milestone. Given what we built in milestone 1, what should milestone 2 focus on? What did we learn that should change the plan?</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="callout">🔜 <strong>Workshop 2:</strong> Milestone 2 is where CI/CD gates, real database integration, auth, and automated deployments come in. That's the next session.</div>
+    <div class="checkpoint"><input type="checkbox" data-ck="03-s7-done"><label>Milestone shipped and new milestone initialized</label></div>
+  </div>
+
+</div>
+<script>
+function copyCode(btn) {
+  const text = btn.previousElementSibling.textContent.trim()
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied'
+    btn.classList.add('copied')
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied') }, 2000)
+  })
+}
+function copyPrompt(promptBlock) {
+  const text = promptBlock.querySelector('.prompt-text').textContent.trim()
+  const btn = promptBlock.querySelector('.copy-btn')
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied'
+    btn.classList.add('copied')
+    setTimeout(() => { btn.textContent = 'Copy prompt'; btn.classList.remove('copied') }, 2000)
+  })
+}
+function switchTab(btn, track) {
+  const step = btn.closest('.step')
+  step.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  step.querySelectorAll('.track').forEach(c => c.classList.remove('active'))
+  btn.classList.add('active')
+  step.querySelector('.track.' + track).classList.add('active')
+}
+const _timers = {}
+function _timerTick(id) {
+  if (!_timers[id] || !_timers[id].running) return
+  _timers[id].remaining--
+  _renderTimer(id)
+  if (_timers[id].remaining <= 0) {
+    _timers[id].running = false
+    _ping()
+    return
+  }
+  _timers[id].raf = setTimeout(() => _timerTick(id), 1000)
+}
+function _renderTimer(id) {
+  const el = document.getElementById('td-' + id)
+  if (!el) return
+  const r = _timers[id].remaining
+  const m = String(Math.floor(r / 60)).padStart(2, '0')
+  const s = String(r % 60).padStart(2, '0')
+  el.textContent = m + ':' + s
+  el.className = 'timer-display' + (r <= 60 ? ' danger' : r <= 180 ? ' warn' : '')
+}
+function startTimer(id, secs) {
+  if (!_timers[id]) _timers[id] = { remaining: secs, running: false }
+  if (_timers[id].running) return
+  _timers[id].running = true
+  _timerTick(id)
+}
+function pauseTimer(id) {
+  if (_timers[id]) { _timers[id].running = false; clearTimeout(_timers[id].raf) }
+}
+function resetTimer(id, secs) {
+  pauseTimer(id)
+  _timers[id] = { remaining: secs, running: false }
+  _renderTimer(id)
+}
+function _ping() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain); gain.connect(ctx.destination)
+    osc.frequency.value = 523
+    gain.gain.setValueAtTime(0.3, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6)
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.6)
+  } catch(e) {}
+}
+function saveCheck(cb, key) {
+  try { localStorage.setItem('ws-check-' + key, cb.checked ? '1' : '0') } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-ck]').forEach(cb => {
+    try {
+      const v = localStorage.getItem('ws-check-' + cb.dataset.ck)
+      if (v === '1') cb.checked = true
+    } catch(e) {}
+    cb.addEventListener('change', () => saveCheck(cb, cb.dataset.ck))
+  })
+})
+</script>
+</body>
+</html>
