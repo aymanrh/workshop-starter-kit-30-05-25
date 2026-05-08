@@ -11,11 +11,11 @@ const STREAM_MAP: Record<string, StreamId> = { a: 'A', b: 'B', c: 'C' }
 export default function StreamPage({ params }: { params: Promise<{ stream: string }> }) {
   const { stream } = use(params)
   const { streams, addItem, changeStatus, resetToMockData, hydrated } = useWorkItems()
-  const streamId = STREAM_MAP[stream] as StreamId
+  const streamId: StreamId | undefined = STREAM_MAP[stream]
   const current = streams.find(s => s.id === streamId)
 
   if (!hydrated) return <div className="text-center text-gray-400 py-16">Loading...</div>
-  if (!current) return <div className="text-center text-red-400 py-16">Stream not found</div>
+  if (!current) return <div className="text-center text-red-400 py-16">Stream not found — use /streams/a, /streams/b, or /streams/c</div>
 
   return (
     <div>

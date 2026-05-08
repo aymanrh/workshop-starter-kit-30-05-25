@@ -46,7 +46,7 @@ export function CreateWorkItemForm({ streamId, onAdd }: Props) {
         <button type="submit" className="text-sm px-4 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700">
           Create
         </button>
-        <button type="button" onClick={() => setOpen(false)} className="text-sm px-3 py-1.5 text-gray-500 hover:text-gray-700">
+        <button type="button" onClick={() => { setTitle(''); setOpen(false); }} className="text-sm px-3 py-1.5 text-gray-500 hover:text-gray-700">
           Cancel
         </button>
       </div>

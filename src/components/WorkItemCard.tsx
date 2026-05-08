@@ -28,10 +28,11 @@ export function WorkItemCard({ item, onStatusChange }: Props) {
           {transitions.map(t => (
             <button
               key={t}
+              aria-label={`Move to ${statusLabel(t)}`}
               onClick={() => onStatusChange(item.stream, item.id, t)}
               className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
             >
-              → {statusLabel(t)}
+              <span aria-hidden="true">→ </span>{statusLabel(t)}
             </button>
           ))}
         </div>
