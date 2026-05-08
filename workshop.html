@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workshop — Step 01: Planning Output</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fa;color:#1a1a2e;line-height:1.6}
+a{color:#4a9eff}
+.ws-header{background:#1e3a5f;color:white;padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.ws-header h1{font-size:1.1rem;font-weight:600}
+.ws-header p{font-size:0.8rem;opacity:.7;margin-top:0.2rem}
+.branch-badge{background:#4a9eff;color:white;padding:.25rem .75rem;border-radius:999px;font-size:.75rem;font-weight:700;white-space:nowrap}
+.ws-progress{height:5px;background:#e2e8f0}
+.ws-progress-fill{height:100%;background:#4a9eff;transition:width .4s}
+.ws-main{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
+.step{background:white;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.step-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.step-num{background:#1e3a5f;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.step-title{font-size:1.05rem;font-weight:600}
+.what{background:#f0f7ff;border-left:3px solid #4a9eff;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin-bottom:1rem;font-size:.92rem;color:#334155}
+.track-tabs{display:flex;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:1rem}
+.tab-btn{flex:1;padding:.55rem 1rem;border:none;cursor:pointer;font-size:.88rem;font-weight:500;background:white;color:#64748b;transition:all .15s}
+.tab-btn.active{background:#1e3a5f;color:white}
+.track{display:none}
+.track.active{display:block}
+.code-wrap{display:flex;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;margin:.6rem 0}
+.code-wrap code{background:#0f172a;color:#e2e8f0;padding:.7rem 1rem;font-family:'SF Mono','Fira Code',monospace;font-size:.88rem;flex:1;display:block;white-space:pre-wrap;word-break:break-all;line-height:1.5}
+.copy-btn{background:#334155;color:#94a3b8;border:none;padding:0 1rem;cursor:pointer;font-size:.8rem;font-weight:600;white-space:nowrap;transition:background .15s}
+.copy-btn:hover{background:#4a9eff;color:white}
+.copy-btn.copied{background:#22c55e;color:white}
+.prompt-block{background:#fafafa;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;margin:.6rem 0}
+.prompt-label{font-size:.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.prompt-text{font-style:italic;color:#475569;line-height:1.5;margin-bottom:.5rem;font-size:.92rem}
+.prompt-block .copy-btn{background:#f1f5f9;color:#4a9eff;border:1px solid #e2e8f0;border-radius:6px;padding:.3rem .75rem;cursor:pointer;font-size:.8rem;font-weight:600}
+.prompt-block .copy-btn.copied{background:#22c55e;color:white;border-color:#22c55e}
+.screenshot{margin:1rem 0}
+.screenshot img{width:100%;border-radius:8px;border:1px solid #e2e8f0;display:block}
+.screenshot-caption{font-size:.78rem;color:#94a3b8;text-align:center;margin-top:.4rem}
+.screenshot-placeholder{background:#f0f7ff;border:2px dashed #4a9eff;border-radius:8px;padding:2.5rem 1rem;text-align:center;color:#4a9eff;font-size:.88rem}
+details{margin:.75rem 0}
+summary{cursor:pointer;color:#4a9eff;font-size:.88rem;font-weight:500;user-select:none}
+.expected{background:#0f172a;color:#94a3b8;padding:1rem;border-radius:0 0 8px 8px;font-family:monospace;font-size:.82rem;white-space:pre-wrap;margin-top:4px;line-height:1.5}
+.checkpoint{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:.75rem 1rem;margin-top:1rem;display:flex;align-items:center;gap:.75rem;font-size:.92rem;color:#166534}
+.checkpoint input[type=checkbox]{width:18px;height:18px;accent-color:#22c55e;cursor:pointer;flex-shrink:0}
+.timer{background:linear-gradient(135deg,#1e3a5f,#0f2644);color:white;border-radius:12px;padding:1.5rem;text-align:center;margin:1.25rem 0}
+.timer-title{font-size:.85rem;opacity:.75;margin-bottom:.4rem}
+.timer-display{font-size:3.5rem;font-weight:700;font-family:'SF Mono','Fira Code',monospace;letter-spacing:.08em;transition:color .5s}
+.timer-display.warn{color:#fbbf24}
+.timer-display.danger{color:#ef4444}
+.timer-note{font-size:.78rem;opacity:.6;margin-top:.4rem}
+.timer-controls{display:flex;gap:.75rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.timer-controls button{padding:.45rem 1.2rem;border-radius:6px;border:none;cursor:pointer;font-weight:600;font-size:.88rem;transition:opacity .15s}
+.timer-controls button:hover{opacity:.85}
+.t-start{background:#22c55e;color:white}
+.t-pause{background:#fbbf24;color:#1a1a2e}
+.t-reset{background:rgba(255,255,255,.15);color:white}
+.role-header{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.75rem 1rem;margin:1rem 0;display:flex;align-items:center;gap:.75rem;font-size:.9rem;font-weight:600;color:#475569}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin:.75rem 0}
+.role{border-radius:8px;padding:.9rem;font-size:.88rem}
+.role-ba{background:#fdf4ff;border:1px solid #e9d5ff}
+.role-dev{background:#eff6ff;border:1px solid #bfdbfe}
+.role-tester{background:#f0fdf4;border:1px solid #bbf7d0}
+.role strong{display:block;margin-bottom:.3rem;font-size:.9rem}
+.role p{color:#64748b;font-style:italic;line-height:1.4}
+.question{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:1rem;margin:.75rem 0}
+.question .q-label{font-size:.78rem;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+.question .q-text{font-weight:600;color:#1a1a2e;margin-bottom:.75rem;font-size:.95rem}
+.file-item{border:1px solid #e2e8f0;border-radius:8px;margin:.6rem 0;overflow:hidden}
+.file-item-header{background:#f8fafc;padding:.6rem 1rem;font-size:.88rem;font-weight:600;color:#475569;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:.5rem}
+.file-item-body{padding:.75rem 1rem;font-size:.88rem;color:#475569}
+.file-item-body ul{padding-left:1rem;margin-top:.3rem}
+.file-item-body li{margin:.2rem 0}
+.nav-next{display:block;width:100%;background:#1e3a5f;color:white;border:none;border-radius:10px;padding:1rem 2rem;font-size:1rem;font-weight:600;cursor:pointer;margin-top:2rem;text-align:center;text-decoration:none;transition:background .15s}
+.nav-next:hover{background:#2d5a8e}
+.concept{background:linear-gradient(135deg,#1e3a5f10,#4a9eff10);border:1px solid #4a9eff40;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.95rem;color:#1e3a5f}
+.concept strong{color:#4a9eff}
+.role-banner{background:#1e3a5f;color:white;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem}
+.role-banner h3{font-size:.88rem;font-weight:600;opacity:.7;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em}
+.role-banner .roles-inline{display:flex;gap:.75rem;flex-wrap:wrap}
+.role-pill{padding:.35rem .9rem;border-radius:999px;font-size:.85rem;font-weight:600}
+.rp-ba{background:#d8b4fe;color:#4c1d95}
+.rp-dev{background:#93c5fd;color:#1e3a8a}
+.rp-tester{background:#86efac;color:#14532d}
+.callout{background:#fef3c7;border-left:3px solid #f59e0b;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0;font-size:.9rem;color:#78350f}
+.divider{border:none;border-top:1px solid #e2e8f0;margin:1.5rem 0}
+.info{background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1rem;font-size:.9rem;color:#1e40af;margin:.75rem 0}
+</style>
+</head>
+<body>
+
+<div class="ws-header">
+  <div><h1>AI-Assisted Development with GSD</h1><p>Step 01 — Explore the planning output</p></div>
+  <span class="branch-badge">01-planning</span>
+</div>
+<div class="ws-progress"><div class="ws-progress-fill" style="width:30%"></div></div>
+
+<div class="ws-main">
+
+  <div class="concept">
+    <strong>Spec-driven development:</strong> ROADMAP.md is the spec. The AI writes code against it — not against your memory, not against a Slack message. Your job right now is to verify the spec reflects your intent.
+  </div>
+
+  <!-- Step 1: File tree tour -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">1</div><div class="step-title">See what GSD created</div></div>
+    <div class="what">📖 <strong>What this does:</strong> GSD ran three agents in parallel — a project researcher, a roadmap builder, and a requirements mapper. The output is 9 files in .planning/. Here's what each one is.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>ls .planning/ && ls .planning/research/</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">List all files inside the .planning folder and describe what each one is for in one sentence each.</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: VS Code Explorer showing .planning/ file tree</div>
+    </div>
+
+    <div class="file-item">
+      <div class="file-item-header">📄 research/SUMMARY.md</div>
+      <div class="file-item-body">Executive overview of all research. <strong>Start here</strong> — 2-minute read that frames everything else.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">⚠️ research/PITFALLS.md — most valuable for BA/Testers</div>
+      <div class="file-item-body">Known risks, anti-patterns, and things that commonly go wrong with this type of project. The AI researched this before writing a single plan line.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">🏗️ research/ARCHITECTURE.md — most valuable for Developers</div>
+      <div class="file-item-body">System design, module boundaries, data flow. How the pieces connect and why.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">🔧 research/STACK.md</div>
+      <div class="file-item-body">Technology choices with rationale and confidence level for each. Includes alternatives considered and when to use them instead.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">✨ research/FEATURES.md</div>
+      <div class="file-item-body">Feature breakdown mapped to requirements. Are these the right features? What's missing?</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">📋 PROJECT.md</div>
+      <div class="file-item-body">The product definition — what you're building, constraints, core value, key decisions. The source of truth for scope.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">🗺️ ROADMAP.md</div>
+      <div class="file-item-body">6 phases with success criteria per phase. This is the spec. AI builds against this, not against your intentions.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">📝 REQUIREMENTS.md</div>
+      <div class="file-item-body">Active, validated, and out-of-scope requirements. Review the out-of-scope list carefully — these are constraints the AI will respect.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">📍 STATE.md</div>
+      <div class="file-item-body">GSD's current position — which phase, what's next, velocity metrics. The AI's persistent memory of where you are.</div>
+    </div>
+  </div>
+
+  <!-- Step 2: Open key files -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">2</div><div class="step-title">Open and read the files — start with PITFALLS</div></div>
+    <div class="what">📖 PITFALLS.md is the most valuable file for non-developers. It shows you what the AI already knows can go wrong — risks you might not have thought of.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>code .planning/research/PITFALLS.md</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <div class="code-wrap"><code>code .planning/ROADMAP.md</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <div class="code-wrap"><code>code .planning/research/ARCHITECTURE.md</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Read .planning/research/PITFALLS.md and explain the top 3 risks in plain language. Which ones should a BA or tester focus on? Then read ROADMAP.md and summarize what phase 1 delivers and what the success criteria are.</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: PITFALLS.md open in VS Code with key risks highlighted</div>
+    </div>
+  </div>
+
+  <!-- Step 3: Group discussion -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">3</div><div class="step-title">Group discussion — does this match your intent?</div></div>
+    <div class="what">📖 The AI interpreted your answers and made decisions. Some of those decisions might surprise you. This is the moment to catch misalignments before any code is written.</div>
+
+    <div class="timer">
+      <div class="timer-title">💬 Group Discussion</div>
+      <div class="timer-display" id="td-01-disc">08:00</div>
+      <div class="timer-controls">
+        <button class="t-start" onclick="startTimer('01-disc',480)">▶ Start</button>
+        <button class="t-pause" onclick="pauseTimer('01-disc')">⏸ Pause</button>
+        <button class="t-reset" onclick="resetTimer('01-disc',480)">↺ Reset</button>
+      </div>
+      <div class="timer-note">8 minutes covers all discussion questions</div>
+    </div>
+
+    <div class="roles">
+      <div class="role role-ba"><strong>🎯 BA / PO</strong><p>Are the requirements complete? What's missing from the user's perspective? Do the out-of-scope items feel right?</p></div>
+      <div class="role role-dev"><strong>💻 Developer</strong><p>Is this architecture buildable in the timeframe? What's the riskiest assumption in ARCHITECTURE.md?</p></div>
+      <div class="role role-tester"><strong>🧪 Tester / QA</strong><p>Can you write acceptance criteria from ROADMAP.md phase 1 success criteria? What's untestable or underspecified?</p></div>
+    </div>
+  </div>
+
+  <!-- Step 4: Run discuss-phase -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">4</div><div class="step-title">Start a phase discussion</div></div>
+    <div class="what">📖 <strong>What this does:</strong> GSD runs a structured discussion of phase 1 — it presents key design decisions and asks you to choose or provide input. Your answers get captured in a CONTEXT.md file that the planner uses. BDD in practice — your decisions become the spec for the agent.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>/gsd discuss-phase 1</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Walk me through a structured discussion of phase 1 (Foundation and Lifecycle). Present the key design decisions one at a time — give me options and ask for my input. After we discuss everything, capture the decisions in a CONTEXT.md file for phase 1.</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: GSD discuss-phase questions appearing in terminal</div>
+    </div>
+
+    <div class="timer">
+      <div class="timer-title">💬 Answer the discussion questions together</div>
+      <div class="timer-display" id="td-01-discuss">08:00</div>
+      <div class="timer-controls">
+        <button class="t-start" onclick="startTimer('01-discuss',480)">▶ Start</button>
+        <button class="t-pause" onclick="pauseTimer('01-discuss')">⏸ Pause</button>
+        <button class="t-reset" onclick="resetTimer('01-discuss',480)">↺ Reset</button>
+      </div>
+      <div class="timer-note">8 minutes · one person types · all roles contribute</div>
+    </div>
+
+    <div class="question">
+      <div class="q-label">GSD Discussion Question</div>
+      <div class="q-text">"What should active / waiting / blocked / closed / cancelled mean for your domain?"</div>
+      <div class="roles">
+        <div class="role role-ba"><strong>🎯 BA / PO</strong><p>What does "blocked" mean to a user vs. "waiting"? Is there a business distinction that matters?</p></div>
+        <div class="role role-dev"><strong>💻 Developer</strong><p>Should these be strict state-machine transitions or flexible? What's easier to implement?</p></div>
+        <div class="role role-tester"><strong>🧪 Tester / QA</strong><p>How would you test the distinction between waiting and blocked? What edge cases exist?</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5: Switch branch -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">5</div><div class="step-title">Switch to the discussion output</div></div>
+    <div class="what">📖 The discussion has been pre-built on <code>02-discussion</code>. Switch now to see what the output looks like.</div>
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>git checkout 02-discussion</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Switch to the 02-discussion branch to see the output of the phase discussion, then open workshop.html to continue.</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+    <div class="checkpoint"><input type="checkbox" data-ck="01-s5-switched"><label>Switched to 02-discussion and opened workshop.html</label></div>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const text = btn.previousElementSibling.textContent.trim()
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied'
+    btn.classList.add('copied')
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied') }, 2000)
+  })
+}
+function copyPrompt(promptBlock) {
+  const text = promptBlock.querySelector('.prompt-text').textContent.trim()
+  const btn = promptBlock.querySelector('.copy-btn')
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied'
+    btn.classList.add('copied')
+    setTimeout(() => { btn.textContent = 'Copy prompt'; btn.classList.remove('copied') }, 2000)
+  })
+}
+function switchTab(btn, track) {
+  const step = btn.closest('.step')
+  step.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  step.querySelectorAll('.track').forEach(c => c.classList.remove('active'))
+  btn.classList.add('active')
+  step.querySelector('.track.' + track).classList.add('active')
+}
+const _timers = {}
+function _timerTick(id) {
+  if (!_timers[id] || !_timers[id].running) return
+  _timers[id].remaining--
+  _renderTimer(id)
+  if (_timers[id].remaining <= 0) {
+    _timers[id].running = false
+    _ping()
+    return
+  }
+  _timers[id].raf = setTimeout(() => _timerTick(id), 1000)
+}
+function _renderTimer(id) {
+  const el = document.getElementById('td-' + id)
+  if (!el) return
+  const r = _timers[id].remaining
+  const m = String(Math.floor(r / 60)).padStart(2, '0')
+  const s = String(r % 60).padStart(2, '0')
+  el.textContent = m + ':' + s
+  el.className = 'timer-display' + (r <= 60 ? ' danger' : r <= 180 ? ' warn' : '')
+}
+function startTimer(id, secs) {
+  if (!_timers[id]) _timers[id] = { remaining: secs, running: false }
+  if (_timers[id].running) return
+  _timers[id].running = true
+  _timerTick(id)
+}
+function pauseTimer(id) {
+  if (_timers[id]) { _timers[id].running = false; clearTimeout(_timers[id].raf) }
+}
+function resetTimer(id, secs) {
+  pauseTimer(id)
+  _timers[id] = { remaining: secs, running: false }
+  _renderTimer(id)
+}
+function _ping() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain); gain.connect(ctx.destination)
+    osc.frequency.value = 523
+    gain.gain.setValueAtTime(0.3, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6)
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.6)
+  } catch(e) {}
+}
+function saveCheck(cb, key) {
+  try { localStorage.setItem('ws-check-' + key, cb.checked ? '1' : '0') } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-ck]').forEach(cb => {
+    try {
+      const v = localStorage.getItem('ws-check-' + cb.dataset.ck)
+      if (v === '1') cb.checked = true
+    } catch(e) {}
+    cb.addEventListener('change', () => saveCheck(cb, cb.dataset.ck))
+  })
+})
+</script>
+
+</body>
+</html>
