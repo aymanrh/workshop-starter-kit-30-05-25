@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workshop — Step 02: Discussion Output</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fa;color:#1a1a2e;line-height:1.6}
+a{color:#4a9eff}
+.ws-header{background:#1e3a5f;color:white;padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.ws-header h1{font-size:1.1rem;font-weight:600}
+.ws-header p{font-size:0.8rem;opacity:.7;margin-top:0.2rem}
+.branch-badge{background:#4a9eff;color:white;padding:.25rem .75rem;border-radius:999px;font-size:.75rem;font-weight:700;white-space:nowrap}
+.ws-progress{height:5px;background:#e2e8f0}
+.ws-progress-fill{height:100%;background:#4a9eff;transition:width .4s}
+.ws-main{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
+.step{background:white;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.step-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.step-num{background:#1e3a5f;color:white;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.step-title{font-size:1.05rem;font-weight:600}
+.what{background:#f0f7ff;border-left:3px solid #4a9eff;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin-bottom:1rem;font-size:.92rem;color:#334155}
+.track-tabs{display:flex;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:1rem}
+.tab-btn{flex:1;padding:.55rem 1rem;border:none;cursor:pointer;font-size:.88rem;font-weight:500;background:white;color:#64748b;transition:all .15s}
+.tab-btn.active{background:#1e3a5f;color:white}
+.track{display:none}
+.track.active{display:block}
+.code-wrap{display:flex;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;margin:.6rem 0}
+.code-wrap code{background:#0f172a;color:#e2e8f0;padding:.7rem 1rem;font-family:'SF Mono','Fira Code',monospace;font-size:.88rem;flex:1;display:block;white-space:pre-wrap;word-break:break-all;line-height:1.5}
+.copy-btn{background:#334155;color:#94a3b8;border:none;padding:0 1rem;cursor:pointer;font-size:.8rem;font-weight:600;white-space:nowrap;transition:background .15s}
+.copy-btn:hover{background:#4a9eff;color:white}
+.copy-btn.copied{background:#22c55e;color:white}
+.prompt-block{background:#fafafa;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;margin:.6rem 0}
+.prompt-label{font-size:.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.prompt-text{font-style:italic;color:#475569;line-height:1.5;margin-bottom:.5rem;font-size:.92rem}
+.prompt-block .copy-btn{background:#f1f5f9;color:#4a9eff;border:1px solid #e2e8f0;border-radius:6px;padding:.3rem .75rem;cursor:pointer;font-size:.8rem;font-weight:600}
+.prompt-block .copy-btn.copied{background:#22c55e;color:white;border-color:#22c55e}
+.screenshot{margin:1rem 0}
+.screenshot img{width:100%;border-radius:8px;border:1px solid #e2e8f0;display:block}
+.screenshot-placeholder{background:#f0f7ff;border:2px dashed #4a9eff;border-radius:8px;padding:2.5rem 1rem;text-align:center;color:#4a9eff;font-size:.88rem}
+details{margin:.75rem 0}
+summary{cursor:pointer;color:#4a9eff;font-size:.88rem;font-weight:500;user-select:none}
+.expected{background:#0f172a;color:#94a3b8;padding:1rem;border-radius:0 0 8px 8px;font-family:monospace;font-size:.82rem;white-space:pre-wrap;margin-top:4px;line-height:1.5}
+.checkpoint{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:.75rem 1rem;margin-top:1rem;display:flex;align-items:center;gap:.75rem;font-size:.92rem;color:#166534}
+.checkpoint input[type=checkbox]{width:18px;height:18px;accent-color:#22c55e;cursor:pointer;flex-shrink:0}
+.timer{background:linear-gradient(135deg,#1e3a5f,#0f2644);color:white;border-radius:12px;padding:1.5rem;text-align:center;margin:1.25rem 0}
+.timer-title{font-size:.85rem;opacity:.75;margin-bottom:.4rem}
+.timer-display{font-size:3.5rem;font-weight:700;font-family:'SF Mono','Fira Code',monospace;letter-spacing:.08em;transition:color .5s}
+.timer-display.warn{color:#fbbf24}
+.timer-display.danger{color:#ef4444}
+.timer-note{font-size:.78rem;opacity:.6;margin-top:.4rem}
+.timer-controls{display:flex;gap:.75rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.timer-controls button{padding:.45rem 1.2rem;border-radius:6px;border:none;cursor:pointer;font-weight:600;font-size:.88rem;transition:opacity .15s}
+.timer-controls button:hover{opacity:.85}
+.t-start{background:#22c55e;color:white}
+.t-pause{background:#fbbf24;color:#1a1a2e}
+.t-reset{background:rgba(255,255,255,.15);color:white}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin:.75rem 0}
+.role{border-radius:8px;padding:.9rem;font-size:.88rem}
+.role-ba{background:#fdf4ff;border:1px solid #e9d5ff}
+.role-dev{background:#eff6ff;border:1px solid #bfdbfe}
+.role-tester{background:#f0fdf4;border:1px solid #bbf7d0}
+.role strong{display:block;margin-bottom:.3rem;font-size:.9rem}
+.role p{color:#64748b;font-style:italic;line-height:1.4}
+.file-item{border:1px solid #e2e8f0;border-radius:8px;margin:.6rem 0;overflow:hidden}
+.file-item-header{background:#f8fafc;padding:.6rem 1rem;font-size:.88rem;font-weight:600;color:#475569;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:.5rem}
+.file-item-body{padding:.75rem 1rem;font-size:.88rem;color:#475569}
+.concept{background:linear-gradient(135deg,#1e3a5f10,#4a9eff10);border:1px solid #4a9eff40;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.95rem;color:#1e3a5f}
+.concept strong{color:#4a9eff}
+.callout{background:#fef3c7;border-left:3px solid #f59e0b;padding:.7rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0;font-size:.9rem;color:#78350f}
+.info{background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:.9rem 1rem;font-size:.9rem;color:#1e40af;margin:.75rem 0}
+</style>
+</head>
+<body>
+
+<div class="ws-header">
+  <div><h1>AI-Assisted Development with GSD</h1><p>Step 02 — Phase discussion output</p></div>
+  <span class="branch-badge">02-discussion</span>
+</div>
+<div class="ws-progress"><div class="ws-progress-fill" style="width:55%"></div></div>
+
+<div class="ws-main">
+
+  <div class="concept">
+    <strong>BDD before the code:</strong> CONTEXT.md is your Gherkin before the Gherkin. The decisions captured here tell the planning agent exactly what to build — and what's left to its discretion.
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">1</div><div class="step-title">See what the discussion added</div></div>
+    <div class="what">📖 The discussion phase added 3 new files inside the phase folder. These capture what you decided, the alternatives considered, and targeted technical research for phase 1.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>ls .planning/phases/01-foundation-auth-and-lifecycle/</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">List the files in .planning/phases/01-foundation-auth-and-lifecycle/ and describe what each one is and why it matters for the team building this.</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="file-item">
+      <div class="file-item-header">🎯 01-CONTEXT.md — decisions captured</div>
+      <div class="file-item-body">What your group decided during the discussion. This is the input to the planner — it builds phase 1 using these decisions, not assumptions.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">📋 01-DISCUSSION-LOG.md — alternatives considered</div>
+      <div class="file-item-body">Every option that was presented and why each was accepted or rejected. The audit trail of design decisions.</div>
+    </div>
+    <div class="file-item">
+      <div class="file-item-header">🔬 01-RESEARCH.md — phase-specific technical research</div>
+      <div class="file-item-body">Targeted research for phase 1 implementation — deeper than the project-level research, focused on specific technical risks for this phase.</div>
+    </div>
+
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: DISCUSSION-LOG.md open showing decisions table and alternatives</div>
+    </div>
+  </div>
+
+  <!-- Step 2: What you decided vs. agent decided -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">2</div><div class="step-title">What you decided vs. what the agent decided</div></div>
+    <div class="what">📖 CONTEXT.md has two sections: decisions you made, and items left to the agent's discretion. Understanding this boundary is critical — it's where unexpected behavior comes from.</div>
+
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>code .planning/phases/01-foundation-auth-and-lifecycle/01-CONTEXT.md</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Read 01-CONTEXT.md and tell me: what decisions did our team make explicitly, and what did we leave to the AI's discretion? For the items left to the AI, what could go wrong if the AI makes a poor choice?</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+    <div class="screenshot">
+      <div class="screenshot-placeholder">📸 Screenshot: CONTEXT.md with "decisions" section and "agent's discretion" section visible</div>
+    </div>
+  </div>
+
+  <!-- Step 3: BA/Tester lens -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">3</div><div class="step-title">BA / Tester lens — what did the AI not ask?</div></div>
+    <div class="what">📖 The AI asked about lifecycle semantics and transitions — but it didn't ask everything. This is where non-technical roles add the most value: spotting the gaps before code is written.</div>
+
+    <div class="timer">
+      <div class="timer-title">💬 Group Discussion — BA/Tester lens</div>
+      <div class="timer-display" id="td-02-ba">08:00</div>
+      <div class="timer-controls">
+        <button class="t-start" onclick="startTimer('02-ba',480)">▶ Start</button>
+        <button class="t-pause" onclick="pauseTimer('02-ba')">⏸ Pause</button>
+        <button class="t-reset" onclick="resetTimer('02-ba',480)">↺ Reset</button>
+      </div>
+      <div class="timer-note">8 minutes · discuss as a group</div>
+    </div>
+
+    <div class="roles">
+      <div class="role role-ba"><strong>🎯 BA / PO</strong><p>What questions did GSD ask that surprised you? What important product questions did it NOT ask? What assumption worries you most?</p></div>
+      <div class="role role-dev"><strong>💻 Developer</strong><p>What's left to the agent's discretion that makes you uncomfortable? What would you want specified before building?</p></div>
+      <div class="role role-tester"><strong>🧪 Tester / QA</strong><p>Can you identify 3 test cases from the discussion output alone? What's the riskiest untested assumption?</p></div>
+    </div>
+
+    <div class="callout">💡 <strong>Spec-driven insight:</strong> Everything left to the agent's discretion is a test case you don't yet have. If you can't write an acceptance criterion for it, neither can the AI.</div>
+  </div>
+
+  <!-- Step 4: Switch to 03 -->
+  <div class="step">
+    <div class="step-header"><div class="step-num">4</div><div class="step-title">Switch to the milestone branch</div></div>
+    <div class="what">📖 Phase 1 has been executed on the <code>03-milestone</code> branch — running app, tests, and verification report. Switch now to see the results.</div>
+    <div class="track-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'technical')">💻 Technical</button>
+      <button class="tab-btn" onclick="switchTab(this,'nontechnical')">💬 Non-Technical</button>
+    </div>
+    <div class="track technical active">
+      <div class="code-wrap"><code>git checkout 03-milestone</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    </div>
+    <div class="track nontechnical">
+      <div class="prompt-block" onclick="copyPrompt(this)">
+        <div class="prompt-label">Paste into Claude or Codex</div>
+        <div class="prompt-text">Switch to the 03-milestone branch to see the executed phase 1 — running app, tests, and verification. Open workshop.html to continue.</div>
+        <button class="copy-btn">Copy prompt</button>
+      </div>
+    </div>
+    <div class="checkpoint"><input type="checkbox" data-ck="02-s4-switched"><label>Switched to 03-milestone and opened workshop.html</label></div>
+  </div>
+
+</div>
+<script>
+function copyCode(btn) {
+  const text = btn.previousElementSibling.textContent.trim()
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied'
+    btn.classList.add('copied')
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied') }, 2000)
+  })
+}
+function copyPrompt(promptBlock) {
+  const text = promptBlock.querySelector('.prompt-text').textContent.trim()
+  const btn = promptBlock.querySelector('.copy-btn')
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied'
+    btn.classList.add('copied')
+    setTimeout(() => { btn.textContent = 'Copy prompt'; btn.classList.remove('copied') }, 2000)
+  })
+}
+function switchTab(btn, track) {
+  const step = btn.closest('.step')
+  step.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  step.querySelectorAll('.track').forEach(c => c.classList.remove('active'))
+  btn.classList.add('active')
+  step.querySelector('.track.' + track).classList.add('active')
+}
+const _timers = {}
+function _timerTick(id) {
+  if (!_timers[id] || !_timers[id].running) return
+  _timers[id].remaining--
+  _renderTimer(id)
+  if (_timers[id].remaining <= 0) {
+    _timers[id].running = false
+    _ping()
+    return
+  }
+  _timers[id].raf = setTimeout(() => _timerTick(id), 1000)
+}
+function _renderTimer(id) {
+  const el = document.getElementById('td-' + id)
+  if (!el) return
+  const r = _timers[id].remaining
+  const m = String(Math.floor(r / 60)).padStart(2, '0')
+  const s = String(r % 60).padStart(2, '0')
+  el.textContent = m + ':' + s
+  el.className = 'timer-display' + (r <= 60 ? ' danger' : r <= 180 ? ' warn' : '')
+}
+function startTimer(id, secs) {
+  if (!_timers[id]) _timers[id] = { remaining: secs, running: false }
+  if (_timers[id].running) return
+  _timers[id].running = true
+  _timerTick(id)
+}
+function pauseTimer(id) {
+  if (_timers[id]) { _timers[id].running = false; clearTimeout(_timers[id].raf) }
+}
+function resetTimer(id, secs) {
+  pauseTimer(id)
+  _timers[id] = { remaining: secs, running: false }
+  _renderTimer(id)
+}
+function _ping() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain); gain.connect(ctx.destination)
+    osc.frequency.value = 523
+    gain.gain.setValueAtTime(0.3, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6)
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.6)
+  } catch(e) {}
+}
+function saveCheck(cb, key) {
+  try { localStorage.setItem('ws-check-' + key, cb.checked ? '1' : '0') } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-ck]').forEach(cb => {
+    try {
+      const v = localStorage.getItem('ws-check-' + cb.dataset.ck)
+      if (v === '1') cb.checked = true
+    } catch(e) {}
+    cb.addEventListener('change', () => saveCheck(cb, cb.dataset.ck))
+  })
+})
+</script>
+</body>
+</html>
